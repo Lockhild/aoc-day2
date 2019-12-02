@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- Font Family -->
+    <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400,500,700&display=swap" rel="stylesheet">
+
+    <title>Day 2: 1202 Program Alarm</title>
+
+    <style>
+        body {
+            background: #0f0f23;
+            color: #ccc;
+            display: flex;
+            justify-content: center;
+            font-family: "Source Code Pro", monospace;
+        }
+
+        .container {
+            /* border: 1px solid white; */
+            max-width: 500px;
+        }
+
+        .font-regular {
+            font-weight: 400;
+        }
+
+        .font-medium {
+            font-weight: 500;
+        }
+
+        .font-bold {
+            font-weight: 700;
+        }
+
+        .color-green {
+            color: #009900;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        input[type="text"] {
+            display: block;
+            width: calc(100% - 12px);
+            height: 30px;
+            background: transparent;
+            border: 1px solid #ccc;
+            color: #ccc;
+            font-size: medium;
+            padding-left: 10px;
+
+            margin: 10px 0;
+            font-family: inherit;
+        }
+
+        input[type="text"]::placeholder {
+            color: #ccc;
+        }
+
+        input[type="text"]:focus {
+            outline-color: #009900;
+        }
+
+        #solve-btn {
+            display: block;
+            width: 100%;
+            height: 35px;
+            background: transparent;
+            color: #009900;
+            font-family: inherit;
+            font-size: 16px;
+            text-transform: uppercase;
+            border: 1px solid #009900;
+            margin-bottom: 40px;
+        }
+
+        #solve-btn:hover {
+            cursor: pointer;
+            opacity: .8;
+        }
+
+        #solve-btn:focus {
+            outline-color: #009900;
+        }
+
+        hr {
+            height: 1px;
+            border: none;
+            background: #ccc;
+            margin: 30px 0;
+        }
+
+        #output-area {
+            overflow-wrap: break-all;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="title-area">
+            <h2 class="font-regular color-green text-center">Intcode Solver</h2>
+            <h3 class="font-regular text-center">--- Day 2: 1202 Program Alarm ---</h3>
+        </div>
+        <hr>
+        <h3 class="color-green font-regular">Input area...</h3>
+
+        <div>
+            <label for="intcode-input">Enter your intcode</label>
+            <span>(separate intcode digits with commas)</span>
+
+            <input id="intcode-input" type="text" placeholder="Intcode...">
+            <button id="solve-btn">Solve</button>
+        </div>
+        <hr>
+        <h3 class="color-green font-regular">Output area...</h3>
+        <div id="output-area"></div>
+    </div>
+
+    <script>
+        const intcodeInput = document.getElementById('intcode-input');
+        const solveBtn = document.getElementById('solve-btn');
+        const outputArea = document.getElementById('output-area');
+
+        solveBtn.addEventListener('click', () => {
+            if (intcodeInput.value.length === 0) {
+                console.error('How about enetering an Intcode first?')
+            } else {
+                try {
+                    const arr = intcodeInput.value.split(',').map(Number);
+                    let html = `<span>[${arr}] --> </span>`;
+                    const result = parseIntcode(arr);
+                    console.log(arr);
+                    html += `<span class="color-green">[${result}]</span>`;
+                    outputArea.innerHTML = html;
+                } catch (error) {
+                    console.error(error);
+                }
+            }
+        });
+
+        function parseIntcode(arr) {
+            for (let i = 0; i < arr.length; i += 4) {
+                switch (arr[i]) {
+                    case 1:
+                        arr[arr[i + 3]] = arr[arr[i + 1]] + arr[arr[i + 2]];
+                        break;
+                    case 2:
+                        arr[arr[i + 3]] = arr[arr[i + 1]] * arr[arr[i + 2]];
+                        break;
+                    case 99:
+                        console.info('Halting the program');
+                        break;
+                    default:
+                        console.error('oops, something went wrong! Are you sure you entered the right Intcode?');
+                }
+            }
+            return arr;
+        }
+    </script>
+</body>
+
+</html>
